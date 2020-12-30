@@ -1,6 +1,5 @@
-from django.views.generic.base import TemplateView
+from django.views.generic import TemplateView
 
 
 class VueTemplateView(TemplateView):
-    def get_template_names(self):
-        return "index.html"
+    template_name = "index.html"

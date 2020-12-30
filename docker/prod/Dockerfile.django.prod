@@ -1,0 +1,50 @@
+# Creates temporary container that will be used as base for building Django
+FROM python:3.7.9 as django_builder
+
+WORKDIR /app 
+
+COPY Pipfile* ./
+
+ENV PIPENV_VENV_IN_PROJECT=1
+
+RUN mkdir .venv 
+RUN pip install pipenv 
+RUN pipenv sync 
+
+
+# Creates temporary container that will be used as base for building Vue
+FROM node:14.13.0-stretch as vue_builder 
+
+WORKDIR /app 
+
+COPY package.json .
+COPY yarn.lock .
+COPY src/ ./src/
+COPY public/ ./public/
+COPY vue.config.js .
+COPY .eslintrc.js .
+COPY .env .
+
+RUN yarn install && yarn build 
+
+
+# Create production container with Django that serves Vue static files
+FROM python:3.7.9
+
+WORKDIR /app 
+
+RUN apt update -y && apt install -y netcat 
+
+COPY backend/ ./backend/
+COPY manage.py .
+COPY --from=django_builder /app/.venv/ ./.venv/
+COPY Pipfile* ./
+COPY docker/prod/django_setup_prod.sh docker/prod/django_setup_prod.sh
+COPY --from=vue_builder /app/vue-dist/ ./vue-dist/ 
+COPY --from=vue_builder /app/node_modules/ ./node_modules
+
+RUN pip install pipenv 
+RUN pipenv run python manage.py collectstatic --noinput
+RUN cp ./vue-dist/index.html ./static/
+RUN cp ./vue-dist/favicon.ico ./static/
+
