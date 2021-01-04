@@ -4,13 +4,13 @@ services:
     db:
         image: postgres:13.1
         env_file:
-            - ./.env
+            - .env
         volumes:
             - db_data:/var/lib/postgresql/data/
 
     django:
         env_file:
-            - ./.env
+            - .env
         volumes:
             - static_files:/app/static
         build:

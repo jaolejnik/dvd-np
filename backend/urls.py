@@ -14,11 +14,19 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, re_path
+from django.urls import include, path, re_path
+from rest_framework import routers
 
-from .views import VueTemplateView
+from .api.views import CommentViewSet, VueTemplateView
+
+router = routers.DefaultRouter()
+router.register("comments", CommentViewSet)
 
 urlpatterns = [
+    # Django admin page
     path("admin/", admin.site.urls),
+    # Api ViewSet
+    path("api/", include(router.urls)),
+    # Vue template view that is served in the production environment
     re_path(r"^.*$", VueTemplateView.as_view(), name="entry_point"),
 ]

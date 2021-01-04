@@ -3,5 +3,3 @@ FROM node:14.13.0-stretch
 WORKDIR /app
 
 COPY . .
-
-RUN yarn install

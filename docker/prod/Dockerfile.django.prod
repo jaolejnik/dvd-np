@@ -39,6 +39,7 @@ COPY backend/ ./backend/
 COPY manage.py .
 COPY --from=django_builder /app/.venv/ ./.venv/
 COPY Pipfile* ./
+COPY .env .
 COPY docker/prod/django_setup_prod.sh docker/prod/django_setup_prod.sh
 COPY --from=vue_builder /app/vue-dist/ ./vue-dist/ 
 COPY --from=vue_builder /app/node_modules/ ./node_modules

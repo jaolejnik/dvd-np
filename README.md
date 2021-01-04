@@ -69,8 +69,12 @@ _For more info visit official Docker docs [here](https://docs.docker.com/compose
 
 ## But how does it work?
 
-Once the containers are up you usally want to visit `localhost:8080`. That's where Vue development server is running. Thanks to the config in `vue.config.js` every request at `"/"` is redirected to `django:8000`, so in other words container with Django development server. \
+Once the containers are up you usally want to visit `localhost:8080`. That's where Vue development server is running. Thanks to the config in `vue.config.js` every request at `"/api/"` is redirected to `django:8000`, so in other words container with Django development server. \
 You can easily develop your app outside the containers since _almost_ every change will be automatically applied inside them. The only exception is when you change something in the development configuration, then you should rebuild the containers.
+
+## Linters and formatters
+
+TODO
 
 ---
 
